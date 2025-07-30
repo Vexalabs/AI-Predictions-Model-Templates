@@ -1,5 +1,4 @@
 import time
-import random
 from typing import Dict, Any
 import datetime
 import logging
@@ -24,54 +23,38 @@ class AIModel:
 
         logger.info("INFO: Attempting to load AI model...")
         self.model = {"status": "dummy_model_loaded", "version": "1.0"}
-        self.last_trained_at = str(datetime.datetime.now()).split(".")[0]  # Store current time as last trained time
-        logger.info(f"INFO: AI model loaded. Status: {self.model['status']}, Version: {self.model['version']}")
+        self.last_trained_at = str(datetime.datetime.now()).split(".")[
+            0
+        ]  # Store current time as last trained time
+        logger.info(
+            f"INFO: AI model loaded. Status: {self.model['status']}, Version: {self.model['version']}"
+        )
 
     def predict(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Placeholder for making predictions using the loaded AI model.
-        This will contain your actual prediction logic.
+        Simple prediction logic that always predicts the home team to win.
         """
 
         logger.info(f"INFO: Making prediction with data: {data}")
         home_team = data.get("home_team", "Home Team")
         away_team = data.get("away_team", "Away Team")
+        home_team_odds = data.get("home_team_odds_avg", 1.5)
 
-        winner_options = [home_team, away_team]
-        over_under_options = [
-            "Over 2.5",
-            "Under 2.5",
-            "Over 3.5",
-            "Under 3.5",
-            None,
-        ]  # Spread can be null
-        spread_options = [f"{home_team} -1.5", f"{away_team} +0.5", None]
-
-        # Generate dummy predictions
-        winner = random.choice(winner_options)
-        winner_confidence = round(random.uniform(50, 99), 1) if winner else None
-        winner_odds = round(random.uniform(1.5, 3.0), 2) if winner else None
-
-        over_under = random.choice(over_under_options)
-        over_under_confidence = round(random.uniform(50, 99), 1) if over_under else None
-        over_under_odds = round(random.uniform(1.6, 2.2), 2) if over_under else None
-
-        spread = random.choice(spread_options)
-        spread_confidence = round(random.uniform(50, 99), 1) if spread else None
-        spread_odds = (round(random.uniform(1.7, 2.5), 2) if spread else None)
-        if spread is None:
-            spread_odds = None
+        # Always predict home team wins
+        winner = home_team
+        winner_confidence = 100.0
+        winner_odds = home_team_odds
 
         return {
             "winner": winner,
             "winner_confidence_pct": winner_confidence,
             "winner_best_bet_odds": winner_odds,
-            "over_under": over_under,
-            "over_under_confidence_pct": over_under_confidence,
-            "over_under_best_bet_odds": over_under_odds,
-            "spread": spread,
-            "spread_confidence_pct": spread_confidence,
-            "spread_best_bet_odds": spread_odds,  # This can be null as per spec
+            "over_under": None,
+            "over_under_confidence_pct": None,
+            "over_under_best_bet_odds": None,
+            "spread": None,
+            "spread_confidence_pct": None,
+            "spread_best_bet_odds": None,
         }
 
     def retrain(self):
