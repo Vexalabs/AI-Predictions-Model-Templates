@@ -11,6 +11,7 @@ import logging
 
 # Configure logging for FastAPI/Uvicorn compatibility
 import sys
+
 uvicorn_logger = logging.getLogger("uvicorn")
 logger = logging.getLogger("stocks_api")
 logger.setLevel(logging.INFO)

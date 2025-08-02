@@ -14,12 +14,14 @@ import joblib
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+from dotenv import load_dotenv
+load_dotenv()
+
 
 
 class AIModel:
     def __init__(self, api_key=None, symbol="AAPL"):
-        # self.api_key = os.getenv("ALPHAVANTAGE_API_KEY", "demo")
-        self.api_key = "KJGAZ9ULN92MEJAZ"
+        self.api_key = os.getenv("ALPHAVANTAGE_API_KEY", "demo")
         self.symbol = symbol
         self.model = None
         self.last_trained_at = None
