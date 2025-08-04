@@ -1,10 +1,10 @@
 from dotenv import load_dotenv
 load_dotenv()
 import uvicorn
-from src.api import SportsPredictionAPI
+from src.api import StocksPredictionAPI
 
 # Initialize the SportsPredictionAPI class and get the FastAPI app instance
-api_instance = SportsPredictionAPI()
+api_instance = StocksPredictionAPI()
 app = api_instance.get_app()
 
 if __name__ == "__main__":
