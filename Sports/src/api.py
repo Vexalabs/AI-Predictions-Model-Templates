@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 import datetime
 import logging
+import json
 
 
 # Configure Logging
@@ -91,6 +92,13 @@ class SportsPredictionAPI:
                 "model_loaded": self.ai_model.model is not None,
                 "last_trained_at": self.ai_model.last_trained_at,
             }
+        
+        @self.app.get("/documentation")
+        async def get_documentation():  
+            # Reads the documentation.json file and returns it oin this enbdpount
+            with open("documentation.json", "r") as file:
+                documentation = json.load(file) 
+            return JSONResponse(content=documentation)
 
     def get_app(self):
         """
