@@ -3,7 +3,7 @@
     "subcategory": "Stocks",
 
     "author": "EMMAH MUSK",
-    "model_name": "MUSKY_STOCKS_PREDICTOR",
-    "model_description": "Using real-time alpha vantage stocks information.",
+    "model_name": "MUSKY_STOCK_PREDICTOR",
+    "model_description": "Using historical stock data to predict future stock prices.",
     "version": "1.0"
 }
