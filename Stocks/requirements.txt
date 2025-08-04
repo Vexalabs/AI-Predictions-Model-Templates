@@ -7,3 +7,4 @@ joblib
 requests
 python-dotenv
 alpha_vantage
+supabase
