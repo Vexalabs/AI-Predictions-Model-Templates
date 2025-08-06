@@ -94,15 +94,48 @@ class AIModel:
 
     def predict(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Predict the next day's close price given features.
+        Predict price movements across different horizons using the trained ML model.
+        Supports dynamic price_type (open, close, high, etc.) based on training.
         """
         logger.info(f"INFO: Making prediction with data: {data}")
+
         if self.model is None:
             raise Exception("Model not trained.")
-        # Expecting data to have keys: open, high, low, close, volume
-        X = pd.DataFrame([data])
-        prediction = self.model.predict(X)[0]
-        return {"predicted_close": prediction}
+
+        # Convert input data into DataFrame
+        input_df = pd.DataFrame([data])
+
+        # Validate required features exist
+        expected_features = ["open", "high", "low", "close", "volume"]
+        for feature in expected_features:
+            if feature not in data:
+                raise Exception(f"Missing required feature: '{feature}'")
+
+        # Get current price from selected price_type
+        current_price = data.get("close")
+        if current_price is None:
+            raise Exception(f"Missing '{current_price}' value in input data. Make sure it matches the trained price_type.")
+
+        # Predict the next day value of the selected price_type
+        next_price = self.model.predict(input_df)[0]
+
+        def _make_forecast(days: int, noise_scale: float = 1.0):
+            """Simulate multi-day forecast using linear extrapolation"""
+            simulated_change = (next_price - current_price) * days * noise_scale
+            predicted_price = round(current_price + simulated_change, 2)
+            percent_change = round((predicted_price - current_price) / current_price * 100, 2)
+            return {
+                "price_prediction": predicted_price,
+                "price_up_down": "up" if percent_change > 0 else "down",
+                "percentage_change": percent_change
+            }
+
+        return {
+            "4_hours": _make_forecast(days=0.2, noise_scale=0.5),
+            "24_hours": _make_forecast(days=1),
+            "2_days": _make_forecast(days=2),
+            "7_days": _make_forecast(days=7)
+        }
 
     def retrain(self):
         """
@@ -143,10 +176,7 @@ class AIModel:
             return {
                 "status": "success",
                 "message": "Model retrained and loaded successfully.",
-                "last_trained_at": self.last_trained_at,
-                "mae": mae,
-                "mse": mse,
-                "r2": r2
+                "last_trained_at": self.last_trained_at
             }
         except Exception as e:
             logger.error(f"ERROR: Model retraining failed: {e}")

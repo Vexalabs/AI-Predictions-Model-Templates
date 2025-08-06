@@ -55,15 +55,16 @@ class StocksPredictionAPI:
             """
             try:
                 logger.info(
-                    f"INFO: Prediction request received for symbol {request.symbol} at {datetime.datetime.now().isoformat()}"
+                    f"INFO: Prediction request received for symbol {request.name} at {datetime.datetime.now().isoformat()}"
                 )
                 # Create/load model for requested symbol
-                model = AIModel(symbol=request.symbol)
+                model = AIModel(symbol=request.name)
                 if model.model is None:
                     raise Exception(f"Model for symbol {request.symbol} not trained. Please retrain first.")
                 # Remove symbol from features for prediction
                 features = request.dict()
-                features.pop("symbol")
+                features.pop("name")
+                features.pop("date")
                 prediction_result = model.predict(features)
                 return JSONResponse(content=jsonable_encoder(prediction_result))
             except Exception as e:
@@ -75,19 +76,19 @@ class StocksPredictionAPI:
 
         from fastapi import Body
         @self.app.post("/retrain", status_code=status.HTTP_200_OK)
-        async def retrain_model(symbol: str = Body("AAPL", embed=True)):
+        async def retrain_model(name: str = Body("AAPL", embed=True)):
             """
             Triggers the retraining process for the AI model for a specified symbol.
             """
             logger.info(
-                f"INFO: Retrain endpoint called for symbol {symbol} at {datetime.datetime.now().isoformat()}"
+                f"INFO: Retrain endpoint called for symbol {name} at {datetime.datetime.now().isoformat()}"
             )
-            model = AIModel(symbol=symbol)
+            model = AIModel(symbol=name)
             retrain_status = model.retrain()
             if retrain_status.get("status") == "success":
                 return JSONResponse(
                     content={
-                        "message": f"Model retraining for {symbol} initiated successfully.",
+                        "message": f"Model retraining for {name} initiated successfully.",
                         "details": retrain_status,
                     }
                 )
@@ -95,7 +96,7 @@ class StocksPredictionAPI:
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail={
-                        "message": f"Model retraining for {symbol} failed.",
+                        "message": f"Model retraining for {name} failed.",
                         "details": retrain_status,
                     },
                 )
