@@ -1,5 +1,6 @@
 from src.schemas import PredictionRequest, PredictionResponse
 from src.models import AIModel
+import json
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
@@ -122,6 +123,12 @@ class StocksPredictionAPI:
             """
             model = AIModel(symbol=symbol)
             return {"symbol": symbol, "metrics": model.get_metrics()}
+        @self.app.get("/documentation")
+        async def get_documentation():
+            # Reads the documentation.json file and returns it on this endpoint
+            with open("documentation.json", "r") as file:
+                documentation = json.load(file) 
+            return JSONResponse(content=documentation)
 
     def get_app(self):
         """
