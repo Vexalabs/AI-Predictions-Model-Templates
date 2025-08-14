@@ -4,6 +4,7 @@ import numpy as np
 import joblib
 from typing import Dict
 
+
 class BTCModel:
     MODEL_PATH = "src/models/rf.pkl"
     SCALER_PATH = "src/models/scaler.pkl"
@@ -59,22 +60,16 @@ class BTCModel:
         return df
 
     def predict(self) -> Dict:
-        import yfinance as yf
-        import numpy as np
-        import pandas as pd
-
-        # 1️⃣ Download last 30 days BTC data
         df = yf.download('BTC-USD', period='30d', interval='1d', progress=False)
         if df.empty:
             raise ValueError("Failed to download BTC-USD data")
         df.reset_index(inplace=True)
 
-        # 2️⃣ Get today's live BTC price
         ticker = yf.Ticker("BTC-USD")
         live_price = float(ticker.info["regularMarketPrice"])
 
 
-        # 3️⃣ Append today as new row
+        
         today_row = {
             "Date": pd.Timestamp.today(),
             "Open": live_price,
@@ -82,32 +77,29 @@ class BTCModel:
             "Low": live_price,
             "Close": live_price,
             "Adj Close": live_price,
-            "Volume": df["Volume"].iloc[-1]  # fallback
+            "Volume": df["Volume"].iloc[-1]  
         }
         df = pd.concat([df, pd.DataFrame([today_row])], ignore_index=True)
 
-        # 4️⃣ Compute features on full dataset
+        
         df = self.create_features(df)
 
-        # 5️⃣ Ensure no NaNs in the last row
+        
         last_row = df.iloc[-1][self.feature_cols]
         if last_row.isnull().any():
-            # Fill missing features with yesterday's values as fallback
             last_row = last_row.fillna(df.iloc[-2][self.feature_cols])
 
         latest_scaled = self.scaler.transform(last_row.values.reshape(1, -1))
 
-        # 6️⃣ Predict up/down for tomorrow
         pred = self.model.predict(latest_scaled)[0]
 
-        # 7️⃣ Get confidence
+
         if hasattr(self.model, "predict_proba"):
             probs = self.model.predict_proba(latest_scaled)[0]
             confidence = float(probs[pred]) * 100
         else:
             confidence = None
 
-        # 8️⃣ Return prediction
         return {
             "24_hours": {
                 "price_prediction": live_price,
