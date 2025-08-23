@@ -1,0 +1,10 @@
+{
+    "category": "Stocks",
+    "company": "Bitcoin",
+    "symbol": "BTC-USD",
+
+    "author": "Abdullah Azhar",
+    "model_name": "BTC-Daily-Movement-Classifier",
+    "model_description": "A binary classification model that predicts whether the Bitcoin price will go UP (1) or DOWN (0) the next day based on historical daily price data and technical indicators. The model is designed for short-term trading signals, not for multi-step forecasting.",
+    "version": "1.0"
+}

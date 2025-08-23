@@ -1,6 +1,20 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from typing import Literal
+
+
+class PredictionRequest(BaseModel):
+    symbol: str = "BTC-USD"
+    interval: str = "1d"
+
+
+class HorizonPrediction(BaseModel):
+    price_prediction: float
+    price_up_down: Literal["up", "down"]
+    percentage_change: float
+
 
 class PredictionResponse(BaseModel):
-    prediction: int = Field(..., description="Raw model prediction (0 or 1)")
-    prediction_label: str = Field(..., description="'Up' if BTC is predicted to rise, else 'Down'")
-    message: str = Field(..., description="Human-readable prediction message")
+    _4_hours: HorizonPrediction
+    _24_hours: HorizonPrediction
+    _2_days: HorizonPrediction
+    _7_days: HorizonPrediction

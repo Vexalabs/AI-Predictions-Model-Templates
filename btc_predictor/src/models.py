@@ -55,55 +55,44 @@ class BTCModel:
         df['atr_14'] = (df['High'] - df['Low']).rolling(window=14, min_periods=1).mean()
 
         df['target'] = np.where(df['Close'].shift(-1) > df['Close'], 1, 0)
-
-        # df = df.dropna()
         return df
 
-    def predict(self) -> Dict:
-        df = yf.download('BTC-USD', period='30d', interval='1d', progress=False)
+    def predict(self, symbol: str = "BTC-USD", interval: str = "1d") -> Dict:
+        # 1) Download history to build features (uses your model/scaler/feature_cols)
+        df = yf.download(symbol, period="3y", interval=interval, progress=False)
         if df.empty:
-            raise ValueError("Failed to download BTC-USD data")
+            raise ValueError(f"Failed to download {symbol} data for features")
         df.reset_index(inplace=True)
-
-        ticker = yf.Ticker("BTC-USD")
-        live_price = float(ticker.info["regularMarketPrice"])
-
-
-        
-        today_row = {
-            "Date": pd.Timestamp.today(),
-            "Open": live_price,
-            "High": live_price,
-            "Low": live_price,
-            "Close": live_price,
-            "Adj Close": live_price,
-            "Volume": df["Volume"].iloc[-1]  
-        }
-        df = pd.concat([df, pd.DataFrame([today_row])], ignore_index=True)
-
-        
         df = self.create_features(df)
 
-        
-        last_row = df.iloc[-1][self.feature_cols]
-        if last_row.isnull().any():
-            last_row = last_row.fillna(df.iloc[-2][self.feature_cols])
+        # 2) Get a robust "live" price (fall back to last close if needed)
+        try:
+            ticker = yf.Ticker(symbol)
+            live_price = float(
+                ticker.info.get("regularMarketPrice", float(df["Close"].iloc[-1]))
+            )
+        except Exception:
+            live_price = float(df["Close"].iloc[-1])
 
-        latest_scaled = self.scaler.transform(last_row.values.reshape(1, -1))
+        # 3) Prepare latest feature vector and classify tomorrow's direction
+        latest_data = df.iloc[-1][self.feature_cols].values.reshape(1, -1)
+        latest_scaled = self.scaler.transform(latest_data)
+        pred = int(self.model.predict(latest_scaled)[0])          # 1 => up, 0 => down
+        direction = "up" if pred == 1 else "down"
 
-        pred = self.model.predict(latest_scaled)[0]
-
-
+        # 4) Confidence (%) for the predicted class, if available
+        confidence: float | None = None
         if hasattr(self.model, "predict_proba"):
             probs = self.model.predict_proba(latest_scaled)[0]
-            confidence = float(probs[pred]) * 100
-        else:
-            confidence = None
+            confidence = float(probs[pred]) * 100.0
+
+        # 5) Build response in the exact shape of your reference
+        payload = {
+            "price": round(live_price, 2),
+            "price_up_down": direction,
+            "percentage_change": None if confidence is None else round(confidence, 2),
+        }
 
         return {
-            "24_hours": {
-                "price_prediction": live_price,
-                "price_up_down": "up" if pred == 1 else "down",
-                "percentage_change": confidence
-            }
+            "24_hours": payload,
         }
