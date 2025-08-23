@@ -1,7 +1,7 @@
 
 # BTC Predictor
 
-Welcome to the **BTC Predictor** project! 🎉  
+Welcome to the **BTC Predictor** project! 
 This project lays out the template for predicting **Bitcoin (BTC)** price direction (**Up** or **Down**) using a classification model.
 
 ---
@@ -63,7 +63,7 @@ Time to unleash your model! In your same terminal, run these commands:
 ## Is It Working? Let's Find Out!
 
 Open your favorite web browser and navigate to:
-👉 `http://localhost:8000/health`
+ `http://localhost:8000/health`
 
 If all is well, you'll see a happy message like this:
 
@@ -75,7 +75,7 @@ If all is well, you'll see a happy message like this:
 ```
 
 You can also see the docs at:
-👉 `http://localhost:8000/docs`
+ `http://localhost:8000/docs`
 
 ---
 
@@ -95,7 +95,7 @@ curl -X POST "http://localhost:8000/predict" \
 
 ```
 
-Get ready for your first prediction! 🚀
+Get ready for your first prediction! 
 
 ---
 
@@ -125,7 +125,7 @@ Made changes? Awesome! Here's how to see them in action:
 1. Go back to your *first* terminal (where the model is running) and press `Ctrl + c` to stop it.
 2. Simply repeat the "Fire Up" and "Is It Working" steps above. Easy peasy!
 
-**Congratulations, you are now a bona fide crypto model builder!** 🎉
+**Congratulations, you are now a bona fide crypto model builder!** 
 
 ---
 
@@ -145,7 +145,7 @@ And the rest:
 * **`LICENSE`**: The project's license.
 * **`README.md`**: What you're reading right now!
 * **`requirements.txt`**: Lets Docker know which Python libraries your project needs.
-  👉 **Important! If you add new Python libraries to your custom logic, remember to add them here!**
+   **Important! If you add new Python libraries to your custom logic, remember to add them here!**
 
 ---
 

@@ -58,14 +58,13 @@ class BTCModel:
         return df
 
     def predict(self, symbol: str = "BTC-USD", interval: str = "1d") -> Dict:
-        # 1) Download history to build features (uses your model/scaler/feature_cols)
+       
         df = yf.download(symbol, period="3y", interval=interval, progress=False)
         if df.empty:
             raise ValueError(f"Failed to download {symbol} data for features")
         df.reset_index(inplace=True)
         df = self.create_features(df)
 
-        # 2) Get a robust "live" price (fall back to last close if needed)
         try:
             ticker = yf.Ticker(symbol)
             live_price = float(
@@ -74,19 +73,16 @@ class BTCModel:
         except Exception:
             live_price = float(df["Close"].iloc[-1])
 
-        # 3) Prepare latest feature vector and classify tomorrow's direction
         latest_data = df.iloc[-1][self.feature_cols].values.reshape(1, -1)
         latest_scaled = self.scaler.transform(latest_data)
-        pred = int(self.model.predict(latest_scaled)[0])          # 1 => up, 0 => down
+        pred = int(self.model.predict(latest_scaled)[0])          
         direction = "up" if pred == 1 else "down"
 
-        # 4) Confidence (%) for the predicted class, if available
         confidence: float | None = None
         if hasattr(self.model, "predict_proba"):
             probs = self.model.predict_proba(latest_scaled)[0]
             confidence = float(probs[pred]) * 100.0
 
-        # 5) Build response in the exact shape of your reference
         payload = {
             "price": round(live_price, 2),
             "price_up_down": direction,
