@@ -4,6 +4,10 @@ from typing import Dict, Any
 import datetime
 import logging
 
+import numpy as np
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO)
@@ -12,144 +16,133 @@ logger = logging.getLogger(__name__)
 
 class AIModel:
     def __init__(self):
-        self.model = None
-        self.last_trained_at = None
-        self._load_model()  # Attempt to load an initial model
+        self.model: DecisionTreeRegressor | None = None
+        self.last_trained_at: str | None = None
+        self._load_model()  # Attempt to load initial model
 
     def _load_model(self):
         """
         Placeholder for loading a pre-trained model from disk or a cloud storage.
         This would load your actual ML model artifact.
         """
-
         logger.info("INFO: Attempting to load AI model...")
-        self.model = {"status": "dummy_model_loaded", "version": "1.0"}
-        self.last_trained_at = str(datetime.datetime.now()).split(".")[
-            0
-        ]  # Store current time as last trained time
-        logger.info(
-            f"INFO: AI model loaded. Status: {self.model['status']}, Version: {self.model['version']}"
+        # Initialize with default Decision Tree parameters
+        self.model = DecisionTreeRegressor(
+            max_depth=7, #tree depth = 7 if we want more the algorithm will be slower but must more accurate
+            random_state=44,
+            min_samples_split=3,
+            min_samples_leaf=1
         )
+        self.last_trained_at = str(datetime.datetime.now()).split(".")[0]
+        logger.info("INFO: AI model initialized (DecisionTreeRegressor).")
 
     def predict(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Placeholder for making predictions using the loaded AI model.
-        This will contain your actual prediction logic.
+        Makes predictions using the Decision Tree model.
         """
 
         logger.info(f"INFO: Making prediction with data: {data}")
 
-        # Here is a hard coded response simulating a prediction 
-        # In a real scenario, you would use the model to make predictions based on the input data
-        # Your response should follow the structure defined here
+        if not self.model:
+            raise ValueError("Model is not loaded or trained.")
+
+        current_price = data["current_price"]
+        horizon = 7
+        today = datetime.datetime.strptime(data["date"], "%Y-%m-%d")
+
+        
+        forecasts = []
+        prev_price = current_price
+        
+        
+        day_offsets = np.array([[i] for i in range(1, horizon + 1)])
+        
+        # Predict prices for all days at once
+        predicted_prices = self.model.predict(day_offsets)
+        
+        for i in range(horizon):
+            predicted_price = float(predicted_prices[i])
+            pct_change = ((predicted_price - prev_price) / prev_price) * 100
+         
+            if pct_change>=0:
+                direction ="UP"
+            else:
+                direction = "DOWN"
+
+            forecasts.append(
+                {
+                    "timestamp": (today + datetime.timedelta(days=i+1)).strftime("%Y-%m-%dT00:00:00"),
+                    "forecast_index": i + 1,
+                    "price": round(predicted_price, 2),  
+                    "pct_change": round(pct_change, 2),
+                    "direction": direction,
+                }
+            )
+            prev_price = predicted_price
+
         return {
-            "prediction_timestamp": "2025-08-12T07:41:42.236533Z",
+            "prediction_timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             "predictions": [
                 {
-                    "name": "Model GPT",  # Name your name
-                    "description": "Stock price forecast with 7-day horizon.",  # Describe your model
+                    "name": "Jad Matta",  # Changed to match example
+                    "description": "Stock price forecast with 7-day horizon.",  
                     "horizon": 7,
                     "frequency": 1,
-                    "stock_name": "S&P 500",  # Which index/stock are you predicting?
-                    "forecasts": [
-                        {
-                            "timestamp": "2025-08-11T00:00:00",
-                            "forecast_index": 1,
-                            "price": 637.0087458737507,
-                            "pct_change": -0.03,
-                            "direction": "DOWN",
-                        },
-                        {
-                            "timestamp": "2025-08-12T00:00:00",
-                            "forecast_index": 2,
-                            "price": 628.8247751970202,
-                            "pct_change": -1.31,
-                            "direction": "DOWN",
-                        },
-                        {
-                            "timestamp": "2025-08-13T00:00:00",
-                            "forecast_index": 3,
-                            "price": 640.4971446347408,
-                            "pct_change": 0.52,
-                            "direction": "UP",
-                        },
-                        {
-                            "timestamp": "2025-08-14T00:00:00",
-                            "forecast_index": 4,
-                            "price": 638.1062217748986,
-                            "pct_change": 0.15,
-                            "direction": "UP",
-                        },
-                        {
-                            "timestamp": "2025-08-15T00:00:00",
-                            "forecast_index": 5,
-                            "price": 640.8362960967352,
-                            "pct_change": 0.57,
-                            "direction": "UP",
-                        },
-                        {
-                            "timestamp": "2025-08-18T00:00:00",
-                            "forecast_index": 6,
-                            "price": 639.421582551462,
-                            "pct_change": 0.35,
-                            "direction": "UP",
-                        },
-                        {
-                            "timestamp": "2025-08-19T00:00:00",
-                            "forecast_index": 7,
-                            "price": 642.4778955136717,
-                            "pct_change": 0.83,
-                            "direction": "UP",
-                        },
-                    ],
+                    "stock_name": data["name"], 
+                    "forecasts": forecasts,
                 }
             ],
         }
 
     def retrain(self):
         """
-        Placeholder for the AI model retraining logic.
-        This would involve:
-        1. Sourcing historical or new data (e.g., from a database, data lake).
-        2. Preprocessing the data.
-        3. Training/fine-tuning the model.
-        4. Evaluating the model.
-        5. Saving the new model artifact.
-        6. Updating the loaded model in memory (or triggering a reload).
+        Retrains the Decision Tree model with new data.
         """
         logger.info("INFO: Starting AI model retraining process...")
         try:
-            # Simulate data sourcing
-            logger.info("INFO: Sourcing historical or new data...")
-            time.sleep(2)  # Simulate network/DB call
+           
+            np.random.seed(44) 
+            
+            
+            X_train = np.array([[i] for i in range(1, 366)])
+            
+         
+            base_trend = 100 + np.arange(1, 366) * 0.5  # Upward trend in year
+            seasonal_effect = 10 * np.sin(np.arange(1, 366) * 0.25)  # yearly pattern
+            noise = np.random.normal(0, 2, 100)  # Random noise
+            
+            y_train = base_trend + seasonal_effect + noise
 
-            # Simulate data preprocessing
-            logger.info("INFO: Preprocessing data...")
-            time.sleep(1)
-
-            # Simulate model training
-            logger.info("INFO: Training new model version...")
-            time.sleep(5)  # This could be a long-running process
-
-            # Simulate model evaluation (e.g., checking performance metrics)
-            logger.info("INFO: Evaluating new model...")
-            time.sleep(1)
-
-            # Simulate saving the new model artifact
-            logger.info("INFO: Saving new model artifact...")
-            # In a real scenario, you'd save to a persistent volume, cloud storage (GCS, S3), etc.
-            time.sleep(0.5)
-
-            # Update the in-memory model (or trigger a reload mechanism)
-            self._load_model()  # Reloads the dummy model for this example
-            self.last_trained_at = time.time()
-            logger.info(
-                f"INFO: AI model retraining complete. New model loaded at {time.ctime(self.last_trained_at)}"
+            # Split data for training and validation
+            X_train_split, X_val, y_train_split, y_val = train_test_split(
+                X_train, y_train, test_size=0.2, random_state=42
             )
+
+            logger.info("INFO: Training DecisionTreeRegressor model...")
+            
+            # Train the Decision Tree model
+            self.model.fit(X_train_split, y_train_split)
+            
+            # Evaluate the model
+            y_pred = self.model.predict(X_val)
+            mse = mean_squared_error(y_val, y_pred)
+            r2 = r2_score(y_val, y_pred)
+            
+            logger.info(f"INFO: Model evaluation - MSE: {mse:.4f}, R²: {r2:.4f}")
+
+            self.last_trained_at = str(datetime.datetime.now()).split(".")[0]
+            logger.info(
+                f"INFO: Model retraining complete. New model trained at {self.last_trained_at}"
+            )
+
             return {
                 "status": "success",
                 "message": "Model retrained and loaded successfully.",
-                "last_trained_at": time.ctime(self.last_trained_at),
+                "last_trained_at": self.last_trained_at,
+                "evaluation_metrics": {
+                    "mse": round(mse, 2),
+                    "r2_score": round(r2, 2)
+                }
             }
         except Exception as e:
             logger.error(f"ERROR: Model retraining failed: {e}")
