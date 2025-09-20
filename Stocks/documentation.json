@@ -3,8 +3,8 @@
     "company": "Apple Inc.",
     "symbol": "AAPL",
 
-    "author": "YOUR NAME", 
-    "model_name": "YOUR MODEL NAME",
-    "model_description": "A brief description of your model.",
+    "author": "Jad Matta", 
+    "model_name": "model/jadmatta",
+    "model_description": "Applying DecisionTree Machine learning algorithm over the Stocks project",
     "version": "1.0"
 }
