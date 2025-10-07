@@ -1,9 +1,8 @@
 {
     "category": "Sports",
     "subcategory": "Soccer",
-
-    "author": "YOUR NAME",
-    "model_name": "YOUR MODEL NAME",
-    "model_description": "A brief description of your model.",
+    "author": "Muhammad Sudais Khalid",
+    "model_name": "Sports Predictor",
+    "model_description": "An AI-powered prediction model that forecasts soccer match winners based on average team odds and historical performance trends.",
     "version": "1.0"
 }
