@@ -16,12 +16,12 @@ Team E,Team H,1.85,2.04,Team E
 Team G,Team H,1.37,2.99,Team G
 Team G,Team D,2.36,3.23,Team G
 Team F,Team C,2.09,2.45,Team F
-Team D,Team B,2.26,3.0,Team D
+Team D,Team B,2.26,3,Team D
 Team G,Team F,1.57,2.03,Team G
 Team E,Team C,2.01,2.99,Team E
 Team H,Team C,1.98,2.72,Team H
 Team B,Team H,2.49,1.52,Team H
-Team D,Team A,1.84,2.0,Team D
+Team D,Team A,1.84,2,Team D
 Team A,Team C,1.93,3.18,Team A
 Team C,Team G,2.24,3.01,Team C
 Team F,Team B,1.93,1.67,Team B
@@ -48,14 +48,14 @@ Team A,Team G,2.39,2.09,Team G
 Team E,Team H,1.65,1.8,Team E
 Team F,Team B,1.9,2.77,Team F
 Team E,Team F,2.18,3.01,Team E
-Team F,Team G,2.0,2.33,Team F
+Team F,Team G,2,2.33,Team F
 Team H,Team A,1.94,3.21,Team H
 Team A,Team H,1.92,2.09,Team A
 Team G,Team B,1.44,1.56,Team G
 Team G,Team C,1.4,2.74,Team G
 Team F,Team D,1.64,1.5,Team D
 Team D,Team F,1.65,2.18,Team D
-Team E,Team A,1.97,2.0,Team E
+Team E,Team A,1.97,2,Team E
 Team E,Team A,1.46,3.04,Team E
 Team E,Team C,2.33,1.81,Team C
 Team A,Team G,1.62,2.84,Team A
@@ -68,7 +68,7 @@ Team A,Team H,2.26,2.71,Team A
 Team G,Team H,1.98,3.41,Team G
 Team C,Team A,2.35,2.28,Team A
 Team A,Team F,1.86,2.46,Team A
-Team E,Team D,1.81,3.0,Team E
+Team E,Team D,1.81,3,Team E
 Team D,Team G,2.05,3.14,Team D
 Team A,Team G,2.48,1.6,Team G
 Team A,Team H,1.61,3.49,Team A
@@ -201,7 +201,7 @@ Team E,Team H,1.35,2.85,Team E
 Team C,Team E,1.87,1.64,Team E
 Team D,Team C,2.41,2.44,Team D
 Team G,Team H,1.53,2.93,Team G
-Team F,Team A,1.55,2.0,Team F
+Team F,Team A,1.55,2,Team F
 Team B,Team E,1.49,3.45,Team B
 Team C,Team B,2.32,1.73,Team B
 Team H,Team G,2.19,2.57,Team H
@@ -232,7 +232,7 @@ Team B,Team G,2.07,2.45,Team B
 Team D,Team H,2.1,2.88,Team D
 Team H,Team B,1.53,3.44,Team H
 Team F,Team A,1.74,2.73,Team F
-Team E,Team C,2.32,2.0,Team C
+Team E,Team C,2.32,2,Team C
 Team G,Team D,1.33,2.14,Team G
 Team D,Team C,2.19,2.95,Team D
 Team D,Team E,1.96,3.05,Team D
@@ -310,7 +310,7 @@ Team H,Team D,2.24,2.23,Team D
 Team H,Team E,2.07,3.22,Team H
 Team A,Team G,2.06,1.97,Team G
 Team B,Team H,2.03,2.89,Team B
-Team B,Team E,2.5,2.0,Team E
+Team B,Team E,2.5,2,Team E
 Team E,Team G,1.97,1.52,Team G
 Team E,Team H,2.08,3.25,Team E
 Team B,Team A,1.52,2.16,Team B
@@ -427,7 +427,7 @@ Team D,Team F,1.98,1.98,Team F
 Team H,Team D,2.29,1.75,Team D
 Team E,Team D,1.78,2.46,Team E
 Team B,Team G,1.59,2.26,Team B
-Team H,Team C,2.27,2.0,Team C
+Team H,Team C,2.27,2,Team C
 Team D,Team H,2.39,2.91,Team D
 Team D,Team G,1.58,3.1,Team D
 Team C,Team E,1.61,3.36,Team C
@@ -441,7 +441,7 @@ Team F,Team D,1.7,1.57,Team D
 Team A,Team G,1.47,2.75,Team A
 Team F,Team G,1.9,3.11,Team F
 Team H,Team E,1.56,3.31,Team H
-Team D,Team G,2.0,2.65,Team D
+Team D,Team G,2,2.65,Team D
 Team B,Team A,2.17,1.94,Team A
 Team F,Team A,2.04,2.16,Team F
 Team A,Team C,1.69,3.14,Team A
@@ -474,7 +474,7 @@ Team B,Team A,2.41,2.96,Team B
 Team B,Team C,1.97,2.67,Team B
 Team A,Team H,1.89,2.11,Team A
 Team E,Team G,2.27,2.98,Team E
-Team H,Team A,2.0,1.9,Team A
+Team H,Team A,2,1.9,Team A
 Team F,Team B,2.01,1.71,Team B
 Team H,Team B,1.81,1.97,Team H
 Team E,Team H,1.86,3.19,Team E
