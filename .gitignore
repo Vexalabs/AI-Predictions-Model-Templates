@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+venv_daily/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+sp500_daily_predictions.log
+
+# Data files
+sp500_predictions/
+*.json
+*.csv
+
+# Test and development files (exclude from Git but keep in workspace)
+test_*.py
+live_ibapi_V9.8.py
+documentation.json
+README_sp500_predictor.md
+sp500_daily_predictor.py
+sp500_daily_predictor_standalone.py
+requirements_daily_predictor.txt
+requirements_standalone.txt
+

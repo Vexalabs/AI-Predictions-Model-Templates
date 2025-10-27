@@ -1,0 +1,11 @@
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pandas>=2.2.0
+numpy>=1.26.0
+prophet>=1.1.5
+yfinance>=0.2.18
+pytz>=2023.3
+scikit-learn>=1.1.0
+requests>=2.31.0
+pydantic>=2.0.0
+python-multipart>=0.0.6

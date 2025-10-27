@@ -1,0 +1,78 @@
+=================================================================================
+COPY AND PASTE THESE COMMANDS ONE BY ONE INTO YOUR TERMINAL
+=================================================================================
+
+IMPORTANT: First restart your terminal by clicking "Yes" on the popup OR clicking the trash icon to close it and opening a new terminal.
+
+=================================================================================
+STEP 1: Verify Git Works (run this first after restarting terminal)
+=================================================================================
+git --version
+
+You should see: git version 2.x.x.windows.x
+
+=================================================================================
+STEP 2: Configure Git with YOUR credentials
+=================================================================================
+git config --global user.name "CyborgNature"
+
+git config --global user.email "nomangul.sw16@meutkhp.edu.pk"
+
+=================================================================================
+STEP 3: Navigate to project directory (if needed)
+=================================================================================
+cd C:\Users\Administrator\Documents\python\AI_Predictions
+
+=================================================================================
+STEP 4: Initialize Git Repository
+=================================================================================
+git init
+
+=================================================================================
+STEP 5: Add GitHub Remote Repository
+=================================================================================
+git remote add origin https://github.com/Vexalabs/AI-Predictions-Model-Templates.git
+
+=================================================================================
+STEP 6: Add Your Files
+=================================================================================
+git add .
+
+=================================================================================
+STEP 7: Commit Your Files
+=================================================================================
+git commit -m "Add S&P 500 prediction framework with Prophet model"
+
+=================================================================================
+STEP 8: Fetch from GitHub
+=================================================================================
+git fetch origin
+
+=================================================================================
+STEP 9: Pull main branch (merge with existing code)
+=================================================================================
+git pull origin main --allow-unrelated-histories
+
+=================================================================================
+STEP 10: Create and switch to new branch
+=================================================================================
+git checkout -b feature/cyborgnature-snp500-predictor
+
+=================================================================================
+STEP 11: Push to GitHub
+=================================================================================
+git push -u origin feature/cyborgnature-snp500-predictor
+
+=================================================================================
+If Step 11 asks for authentication:
+- Username: CyborgNature
+- Password: Use a GitHub Personal Access Token (PAT)
+  Create one at: https://github.com/settings/tokens
+  Give it "repo" permissions
+
+=================================================================================
+DONE! Check your branch at:
+https://github.com/Vexalabs/AI-Predictions-Model-Templates/tree/feature/cyborgnature-snp500-predictor
+
+=================================================================================
+
