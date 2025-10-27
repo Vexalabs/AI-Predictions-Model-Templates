@@ -1,53 +1,6 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual environments
 venv/
-venv_daily/
-env/
-ENV/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Data files
-sp500_predictions/
-*.json
-*.csv
-
-# Git
+__pycache__/
+*.pyc
 .git/
-
-# Documentation (keep main README)
-README_sp500_predictor.md
-README_*.md
+.vscode/
+.DS_Store

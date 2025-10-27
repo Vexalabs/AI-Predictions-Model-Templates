@@ -1,0 +1,37 @@
+=================================================================================
+THE PROBLEM: Remote URL is incorrect
+=================================================================================
+Current (WRONG): https://github.com/AI-Predictions-Model-Templates/Stocks.git
+Correct: https://github.com/Vexalabs/AI-Predictions-Model-Templates.git
+
+=================================================================================
+FIX COMMANDS - Run these:
+=================================================================================
+
+Step 1: Remove the incorrect remote
+git remote remove origin
+
+Step 2: Add the CORRECT remote
+git remote add origin https://github.com/Vexalabs/AI-Predictions-Model-Templates.git
+
+Step 3: Verify it's correct
+git remote -v
+
+Step 4: Fetch the main branch
+git fetch origin main
+
+Step 5: Pull the Stocks directory structure
+git pull origin main --allow-unrelated-histories
+
+Step 6: Create your branch
+git checkout -b feature/cyborgnature-snp500-predictor
+
+Step 7: Push your branch
+git push -u origin feature/cyborgnature-snp500-predictor
+
+=================================================================================
+The key issue was:
+- OLD: AI-Predictions-Model-Templates (wrong organization/user)
+- NEW: Vexalabs (correct organization/user)
+=================================================================================
+

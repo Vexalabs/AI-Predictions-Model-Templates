@@ -1,237 +1,62 @@
-# S&P 500 Stock Prediction API
+# AI-Predictions-Model-Templates: Become a Prediction Powerhouse!
 
-Welcome to the S&P 500 Stock Prediction project! This project provides AI-powered stock price predictions using Facebook Prophet with technical indicators.
+Welcome to the AI-Predictions-Model-Templates project, your ultimate guide to building and running your very own prediction model! Ever dreamt of predicting sport game outcomes, crypto prices and stock trends like a pro? Well, you're in the right place! We'll walk you through every step, making it easy, fun and give you the opportunity to earn serious rewards if your model proves truly world-class!
 
-## Prerequisites
+---
 
-Before getting started, make sure your system meets these requirements:
+Should you hit a snag or need a high-five, our experts at **AI Predictions** are here to help: `devteam@aipredictions.ai`
 
-### Required Software
-- **Python**: Version 3.10 or higher - [Download Python](https://www.python.org/downloads/)
-- **Visual Studio Code**: Latest version - [Download VS Code](https://code.visualstudio.com/)
-- **Docker Desktop**: See requirements below
+---
 
-### Docker Desktop Requirements
+## Ready to Build Your Own Prediction Supermodel? Let's Go!
 
-**Windows:**
-- Windows 10/11 64-bit: Pro, Enterprise, or Education (Build 16299 or later)
-- WSL 2 feature enabled
-- 4GB system RAM minimum
-- BIOS-level hardware virtualization enabled
-- [Download Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/)
+### First Things First: Your Toolkit!
 
-**macOS:**
-- macOS version 11 or newer (Intel or Apple Silicon)
-- At least 4GB of RAM
-- [Download Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/)
+Before we dive in, let's gather your essential tools. Don't worry, it's just a few clicks!
 
-**Linux:**
-- 64-bit kernel and CPU support for virtualization
-- systemd init system
-- At least 4GB of RAM
-- [Download Docker Desktop for Linux](https://www.docker.com/products/docker-desktop/)
+* **Python:** The magic behind it all! Get it here: [Python](https://www.python.org/downloads/)
+* **Visual Studio Code:** Your coding command center: [Visual Studio Code](https://code.visualstudio.com/download)
+* **Docker:** Imagine a portable prediction lab – that's Docker! Grab it here: [Docker](https://docs.docker.com/desktop/)
+* **Git:** Your project's personal version control assistant: [Git](https://git-scm.com/downloads)
 
-## Fire Up Your Model with Docker!
+---
 
-Time to unleash your model! In your terminal, run these commands:
+### Get Your Project Rolling: Clone It!
 
-1. **Change directory into the stocks template:**
-   ```bash
-   cd Stocks
-   ```
+Let's bring the project to your computer!
 
-2. **Build the magic image:**
-   ```bash
-   docker build -t stocks-predictor .
-   ```
+1.  Open **Visual Studio Code**.
+2.  Head to `Terminal` > `New Terminal`.
+3.  In the top right of your terminal, click the `+` dropdown and select `Git Bash`.
 
-3. **Run your new image:**
-   ```bash
-   docker run -p 8000:8000 stocks-predictor
-   ```
+Now, paste these commands into your Git Bash terminal and hit Enter after each:
 
-Keep this terminal running! It's busy making predictions!
+1.  **Clone the project:** `git clone https://github.com/Vexalabs/AI-Predictions-Model-Templates.git`
+2.  **Step into your new project:** `cd AI-Predictions-Model-Templates`
 
-## Is It Working? Let's Find Out!
+Almost there! Let's open the project files:
 
-Open your favorite web browser and navigate to: http://localhost:8000/health
+1.  In Visual Studio Code, go to `File` > `Open Folder`.
+2.  Select the `AI-Predictions-Model-Templates` folder you just cloned. Voilà!
 
-If all is well, you'll see a happy message like this:
+Awesome, You're set! Now you can navigate into one of the specific templates and start building models. 
 
-```json
-{
-  "status": "healthy",
-  "model_loaded": true,
-  "last_trained_at": "2025-01-25 09:33:58"
-}
-```
+Good Luck!
 
-You can also see the docs at: http://localhost:8000/docs
+### Publish Your Model
+Once you have finished fine tuning you model and you are ready to publish it you can create a new branch on the gir Repo and AI Predictions will deploy it for you.
 
-## Now, let's make some predictions!
+1. Create a new branch
+`git checkout -b model/YOUR_MODEL_NAME`
 
-In Visual Studio Code, go to the top right of your terminal, click the + dropdown, and select Git Bash. This will open a second terminal.
+2. Push your changes up
+`git add .`
+`git commit -m "YOUR COMMIT MESSAGE"`
+`git push`
 
-In this new terminal, paste and run the following command:
+3. Let AI Predictions deploy your model
 
-```bash
-curl -X POST "http://localhost:8000/predict" \
-     -H "Content-Type: application/json" \
-     -d '{
-         "name": "AAPL",
-         "date": "2025-04-10",
-         "current_price": 202.38
-       }'
-```
+4. Check back to see your deployed model: (AI Predictions)[https://aipredictions.ai/]
 
-Get ready for your first prediction! How exciting is that?!
+5. Track your model's performance on the platform
 
-The response should be formatted as follows:
-
-```json
-{
-  "prediction_timestamp": "2025-08-12T07:41:42.236533Z",
-  "predictions": [
-    {
-      "name": "S&P 500 Prophet Model",
-      "description": "Stock price forecast with 7-day horizon using Facebook Prophet",
-      "horizon": 7,
-      "frequency": 1,
-      "stock_name": "AAPL",
-      "forecasts": [
-        {
-          "timestamp": "2025-08-11T00:00:00",
-          "forecast_index": 1,
-          "price": 637.01,
-          "pct_change": -0.03,
-          "direction": "DOWN"
-        },
-        {
-          "timestamp": "2025-08-12T00:00:00",
-          "forecast_index": 2,
-          "price": 628.82,
-          "pct_change": -1.31,
-          "direction": "DOWN"
-        },
-        {
-          "timestamp": "2025-08-13T00:00:00",
-          "forecast_index": 3,
-          "price": 640.50,
-          "pct_change": 0.52,
-          "direction": "UP"
-        },
-        {
-          "timestamp": "2025-08-14T00:00:00",
-          "forecast_index": 4,
-          "price": 638.11,
-          "pct_change": 0.15,
-          "direction": "UP"
-        },
-        {
-          "timestamp": "2025-08-15T00:00:00",
-          "forecast_index": 5,
-          "price": 640.84,
-          "pct_change": 0.57,
-          "direction": "UP"
-        },
-        {
-          "timestamp": "2025-08-18T00:00:00",
-          "forecast_index": 6,
-          "price": 639.42,
-          "pct_change": 0.35,
-          "direction": "UP"
-        },
-        {
-          "timestamp": "2025-08-19T00:00:00",
-          "forecast_index": 7,
-          "price": 642.48,
-          "pct_change": 0.83,
-          "direction": "UP"
-        }
-      ]
-    }
-  ]
-}
-```
-
-## Craft Your Own Prediction Masterpiece!
-
-This is where the real fun begins! You get to customize how your model thinks.
-
-Open `src/models.py`. This is your canvas! Update the logic in the `predict` method to reflect your brilliant prediction strategy.
-
-Made changes? Awesome! Here's how to see them in action:
-
-1. Go back to your first terminal (where the model is running) and press `Ctrl + c` to stop it.
-2. Simply repeat the "Fire Up" and "Is It Working" steps above. Easy peasy!
-
-Congratulations, you are now a bona fide model builder!
-
-## Peek Under the Hood: Project Files Explained
-
-Curious about what makes the Stocks model tick? Here's a quick tour:
-
-- **main.py**: This is the heart of your project, the starting point for your API and where your model gets called.
-- **src/api.py**: Defines how your model talks to the world (the API structure).
-- **src/models.py**: This is where YOUR custom prediction logic lives! Get creative here.
-- **src/schemas.py**: Lays out the data structures the API expects and provides.
-
-And the rest:
-
-- **.dockerignore**: Tells Docker what files to skip. You probably won't need to touch this often.
-- **.gitignore**: Tells Git what files to ignore. No need to edit unless you add new files you don't want tracked.
-- **LICENSE**: The project's license.
-- **README.md**: What you're reading right now!
-- **requirements.txt**: Lets Docker know which Python libraries your project needs. Important! If you add new Python libraries to your custom logic, remember to add them here!
-
-## Features
-
-- **S&P 500 Stock Predictions**: Predict prices for any S&P 500 stock
-- **Facebook Prophet**: Advanced time series forecasting
-- **Technical Indicators**: SMA, EMA, MACD, RSI, Bollinger Bands, Volume analysis
-- **7-Day Horizon**: Predict up to 7 days ahead
-- **Real-time Data**: Uses yfinance for live market data
-- **RESTful API**: Clean, documented API endpoints
-- **Docker Ready**: Easy deployment and scaling
-- **Health Monitoring**: Built-in health checks
-
-## API Endpoints
-
-- `GET /health` - Health check and model status
-- `POST /predict` - Generate stock price predictions
-- `GET /symbols` - Get available S&P 500 symbols
-- `GET /docs` - Interactive API documentation
-
-## Model Details
-
-- **Algorithm**: Facebook Prophet with technical indicators
-- **Training Data**: 1 year of daily OHLCV data
-- **Prediction Horizon**: 7 days
-- **Data Source**: yfinance API
-- **Technical Indicators**: SMA, EMA, MACD, RSI, Bollinger Bands, Volume ratios, Volatility
-
-## Development
-
-To run locally without Docker:
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the API
-python main.py
-```
-
-The API will be available at http://localhost:8000
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.

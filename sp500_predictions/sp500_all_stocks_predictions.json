@@ -1,0 +1,130 @@
+{
+  "prediction_timestamp": "2025-10-04T21:11:00.241952Z",
+  "total_stocks": 4,
+  "successful_predictions": 4,
+  "failed_predictions": 0,
+  "predictions": [
+    {
+      "prediction_timestamp": "2025-10-04T21:10:37.711486Z",
+      "predictions": [
+        {
+          "name": "NVDA Daily Close Prediction",
+          "description": "Daily close price prediction for NVDA using Facebook Prophet with technical indicators",
+          "horizon": 1,
+          "frequency": 1,
+          "stock_name": "NVDA",
+          "forecasts": [
+            {
+              "timestamp": "2025-10-06T00:00:00",
+              "forecast_index": 1,
+              "close": 189.61,
+              "pct_change": 1.06,
+              "direction": "UP"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "model_type": "Prophet",
+        "symbol": "NVDA",
+        "training_days": 30,
+        "last_training_date": "2025-10-03",
+        "prediction_horizon": 1,
+        "data_source": "Interactive Brokers API"
+      }
+    },
+    {
+      "prediction_timestamp": "2025-10-04T21:10:48.047083Z",
+      "predictions": [
+        {
+          "name": "MSFT Daily Close Prediction",
+          "description": "Daily close price prediction for MSFT using Facebook Prophet with technical indicators",
+          "horizon": 1,
+          "frequency": 1,
+          "stock_name": "MSFT",
+          "forecasts": [
+            {
+              "timestamp": "2025-10-06T00:00:00",
+              "forecast_index": 1,
+              "close": 517.34,
+              "pct_change": -0.0,
+              "direction": "DOWN"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "model_type": "Prophet",
+        "symbol": "MSFT",
+        "training_days": 30,
+        "last_training_date": "2025-10-03",
+        "prediction_horizon": 1,
+        "data_source": "Interactive Brokers API"
+      }
+    },
+    {
+      "prediction_timestamp": "2025-10-04T21:10:49.756888Z",
+      "predictions": [
+        {
+          "name": "AAPL Daily Close Prediction",
+          "description": "Daily close price prediction for AAPL using Facebook Prophet with technical indicators",
+          "horizon": 1,
+          "frequency": 1,
+          "stock_name": "AAPL",
+          "forecasts": [
+            {
+              "timestamp": "2025-10-06T00:00:00",
+              "forecast_index": 1,
+              "close": 259.37,
+              "pct_change": 0.52,
+              "direction": "UP"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "model_type": "Prophet",
+        "symbol": "AAPL",
+        "training_days": 30,
+        "last_training_date": "2025-10-03",
+        "prediction_horizon": 1,
+        "data_source": "Interactive Brokers API"
+      }
+    },
+    {
+      "prediction_timestamp": "2025-10-04T21:11:00.140974Z",
+      "predictions": [
+        {
+          "name": "AMZN Daily Close Prediction",
+          "description": "Daily close price prediction for AMZN using Facebook Prophet with technical indicators",
+          "horizon": 1,
+          "frequency": 1,
+          "stock_name": "AMZN",
+          "forecasts": [
+            {
+              "timestamp": "2025-10-06T00:00:00",
+              "forecast_index": 1,
+              "close": 218.06,
+              "pct_change": -0.66,
+              "direction": "DOWN"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "model_type": "Prophet",
+        "symbol": "AMZN",
+        "training_days": 30,
+        "last_training_date": "2025-10-03",
+        "prediction_horizon": 1,
+        "data_source": "Interactive Brokers API"
+      }
+    }
+  ],
+  "metadata": {
+    "model_type": "Prophet",
+    "prediction_horizon": 1,
+    "training_days": 30,
+    "data_source": "Interactive Brokers API"
+  }
+}

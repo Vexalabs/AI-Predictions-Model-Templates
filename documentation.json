@@ -1,0 +1,46 @@
+{
+    "name": "S&P 500 Stock Prediction API",
+    "description": "AI-powered stock price predictions using Facebook Prophet with technical indicators",
+    "version": "1.0.0",
+    "author": "AI Prediction Platform",
+    "license": "MIT",
+    "features": [
+      "S&P 500 stock price predictions",
+      "Facebook Prophet time series forecasting",
+      "Technical indicators integration",
+      "RESTful API with FastAPI",
+      "Docker containerization",
+      "Real-time data from yfinance",
+      "7-day prediction horizon",
+      "Percentage change calculations",
+      "Price direction indicators"
+    ],
+    "endpoints": {
+      "health": "GET /health - Health check endpoint",
+      "predict": "POST /predict - Generate stock price predictions",
+      "symbols": "GET /symbols - Get available S&P 500 symbols",
+      "docs": "GET /docs - API documentation"
+    },
+    "model_details": {
+      "algorithm": "Facebook Prophet",
+      "training_data": "1 year of daily OHLCV data",
+      "technical_indicators": [
+        "SMA (5, 10, 20)",
+        "EMA (5, 10)",
+        "MACD",
+        "RSI (14)",
+        "Bollinger Bands",
+        "Volume ratios",
+        "Volatility measures"
+      ],
+      "prediction_horizon": "7 days",
+      "data_source": "yfinance API"
+    },
+    "requirements": {
+      "python": ">=3.10",
+      "memory": ">=2GB RAM",
+      "storage": ">=1GB free space"
+    }
+  }
+
+

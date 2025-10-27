@@ -1,0 +1,51 @@
+=================================================================================
+RUN THESE COMMANDS ONE BY ONE
+=================================================================================
+
+You've already completed:
+✅ git --version
+✅ git config
+✅ git init
+✅ git add .
+
+=================================================================================
+NEXT: Commit your changes
+=================================================================================
+git commit -m "Add S&P 500 prediction framework with Prophet model"
+
+=================================================================================
+Check if remote already exists, if not add it
+=================================================================================
+git remote -v
+
+If it shows "origin", skip the next command.
+If it shows nothing or different URL, run:
+git remote remove origin
+git remote add origin https://github.com/Vexalabs/AI-Predictions-Model-Templates.git
+
+=================================================================================
+Fetch the main branch from GitHub
+=================================================================================
+git fetch origin main
+
+=================================================================================
+Create a new branch from main (this will be your feature branch)
+=================================================================================
+git checkout -b feature/cyborgnature-snp500-predictor origin/main
+
+If that fails, try:
+git branch feature/cyborgnature-snp500-predictor
+git checkout feature/cyborgnature-snp500-predictor
+
+=================================================================================
+Push your new branch to GitHub
+=================================================================================
+git push -u origin feature/cyborgnature-snp500-predictor
+
+=================================================================================
+If push asks for authentication:
+- Username: CyborgNature
+- Password: Use a GitHub Personal Access Token
+  Create one at: https://github.com/settings/tokens (give it "repo" permissions)
+
+=================================================================================
