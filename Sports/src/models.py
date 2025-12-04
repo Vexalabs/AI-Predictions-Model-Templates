@@ -24,12 +24,8 @@ class AIModel:
 
         logger.info("INFO: Attempting to load AI model...")
         self.model = {"status": "dummy_model_loaded", "version": "1.0"}
-        self.last_trained_at = str(datetime.datetime.now()).split(".")[
-            0
-        ]  # Store current time as last trained time
-        logger.info(
-            f"INFO: AI model loaded. Status: {self.model['status']}, Version: {self.model['version']}"
-        )
+        self.last_trained_at = str(datetime.datetime.now()).split(".")[0]  # Store current time as last trained time
+        logger.info(f"INFO: AI model loaded. Status: {self.model['status']}, Version: {self.model['version']}")
 
     def predict(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -62,7 +58,7 @@ class AIModel:
 
         spread = random.choice(spread_options)
         spread_confidence = round(random.uniform(50, 99), 1) if spread else None
-        spread_odds = round(random.uniform(1.7, 2.5), 2) if spread else None
+        spread_odds = (round(random.uniform(1.7, 2.5), 2) if spread else None)
         if spread is None:
             spread_odds = None
 
