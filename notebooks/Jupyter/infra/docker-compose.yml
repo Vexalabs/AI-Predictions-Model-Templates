@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  aip-notebook:
+    build:
+      context: ..
+      dockerfile: ./infra/Dockerfile
+    ports:
+      - "8888:8888"
+      - "8000:8000"
+    volumes:
+      - ../model:/home/jovyan/work/model
+    environment:
+      - JUPYTER_TOKEN=123
