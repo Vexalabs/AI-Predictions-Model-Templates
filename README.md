@@ -1,62 +1,108 @@
-# AI-Predictions-Model-Templates: Become a Prediction Powerhouse!
+# Soccer Match Prediction Model
 
-Welcome to the AI-Predictions-Model-Templates project, your ultimate guide to building and running your very own prediction model! Ever dreamt of predicting sport game outcomes, crypto prices and stock trends like a pro? Well, you're in the right place! We'll walk you through every step, making it easy, fun and give you the opportunity to earn serious rewards if your model proves truly world-class!
+This is a sample project for predicting soccer match outcomes. It provides a FastAPI-based REST API that serves predictions based on team data.
 
----
+## Project Structure
 
-Should you hit a snag or need a high-five, our experts at **AI Predictions** are here to help: `devteam@aipredictions.ai`
+- `main.py`: The FastAPI application containing the prediction logic and API endpoints.
+- `requirements.txt`: List of Python dependencies required to run the project.
+- `Dockerfile`: Configuration for containerizing the application.
+- `cloudrun.yaml`: Deployment configuration for Google Cloud Run.
 
----
+## Getting Started
 
-## Ready to Build Your Own Prediction Supermodel? Let's Go!
+### 1. Install Dependencies
 
-### First Things First: Your Toolkit!
+Open a terminal in this directory and run:
 
-Before we dive in, let's gather your essential tools. Don't worry, it's just a few clicks!
+```bash
+pip install -r requirements.txt
+```
 
-* **Python:** The magic behind it all! Get it here: [Python](https://www.python.org/downloads/)
-* **Visual Studio Code:** Your coding command center: [Visual Studio Code](https://code.visualstudio.com/download)
-* **Docker:** Imagine a portable prediction lab – that's Docker! Grab it here: [Docker](https://docs.docker.com/desktop/)
-* **Git:** Your project's personal version control assistant: [Git](https://git-scm.com/downloads)
+### 2. Run the API
 
----
+Start the local development server:
 
-### Get Your Project Rolling: Clone It!
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8080
+```
 
-Let's bring the project to your computer!
+The API will be available at `http://localhost:8080`.
 
-1.  Open **Visual Studio Code**.
-2.  Head to `Terminal` > `New Terminal`.
-3.  In the top right of your terminal, click the `+` dropdown and select `Git Bash`.
+### 3. Test the API
 
-Now, paste these commands into your Git Bash terminal and hit Enter after each:
+You can test the prediction endpoint using `curl` or the interactive Swagger UI.
 
-1.  **Clone the project:** `git clone https://github.com/Vexalabs/AI-Predictions-Model-Templates.git`
-2.  **Step into your new project:** `cd AI-Predictions-Model-Templates`
+**Using Swagger UI:**
+Open your browser and navigate to: [http://localhost:8080/docs](http://localhost:8080/docs)
 
-Almost there! Let's open the project files:
+**Using curl:**
 
-1.  In Visual Studio Code, go to `File` > `Open Folder`.
-2.  Select the `AI-Predictions-Model-Templates` folder you just cloned. Voilà!
+```bash
+curl -X POST "http://localhost:8080/predict" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "matches": [
+             {
+               "home_team": "Arsenal",
+               "away_team": "Chelsea",
+               "league": "Premier League"
+             }
+           ]
+         }'
+```
 
-Awesome, You're set! Now you can navigate into one of the specific templates and start building models. 
+## Quick Start (Makefile)
 
-Good Luck!
+We've included a `Makefile` to simplify common tasks:
 
-### Publish Your Model
-Once you have finished fine tuning you model and you are ready to publish it you can create a new branch on the gir Repo and AI Predictions will deploy it for you.
+- `make install`: Install dependencies
+- `make run`: Run the API locally
+- `make test`: Run compliance tests
+- `make lint`: Format code with Black
+- `make build`: Build Docker image
+- `make docker-run`: Run in Docker
 
-1. Create a new branch
-`git checkout -b model/YOUR_MODEL_NAME`
+## Docker Support
 
-2. Push your changes up
-`git add .`
-`git commit -m "YOUR COMMIT MESSAGE"`
-`git push`
+To ensure your model runs consistently in the cloud, you should test it with Docker.
 
-3. Let AI Predictions deploy your model
+### 1. Install Docker
+If you haven't already, install Docker Desktop from [docker.com](https://www.docker.com/products/docker-desktop).
 
-4. Check back to see your deployed model: (AI Predictions)[https://aipredictions.ai/]
+### 2. Build & Run
+```bash
+# Build the image
+docker build -t soccer-model .
 
-5. Track your model's performance on the platform
+# Run the container
+docker run -p 8080:8080 soccer-model
+```
 
+The API will be available at `http://localhost:8080`.
+
+## Testing & Compliance
+
+This model comes with a compliance test suite to ensure it meets the API contract required by the orchestrator.
+
+### Run Tests
+```bash
+pytest test_api.py
+# OR
+make test
+```
+
+### Run Linting
+```bash
+black .
+# OR
+make lint
+```
+
+## Customizing the Model
+
+To implement your own logic, edit the `predict` function in `main.py`. You can load your trained ML models (e.g., scikit-learn, TensorFlow, PyTorch) and use them to generate real predictions.
+
+**Important:** Ensure your changes do not break the API contract verified by `test_api.py`.
+
+I love my country PAKISTAN!
