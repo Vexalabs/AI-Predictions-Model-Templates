@@ -1,128 +1,209 @@
-import time
-import random
-from typing import Dict, Any
+import os
 import datetime
 import logging
 
+import pandas as pd
+import joblib
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
-# Configure Logging
+# Logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Paths
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+MODEL_DIR = os.path.join(BASE_DIR, "models")
+os.makedirs(MODEL_DIR, exist_ok=True)
+
+MODEL_FILE = os.path.join(MODEL_DIR, "sports_model.joblib")
+TEAM_ENCODER_FILE = os.path.join(MODEL_DIR, "team_encoder.joblib")
+WINNER_ENCODER_FILE = os.path.join(MODEL_DIR, "winner_encoder.joblib")
+SCALER_FILE = os.path.join(MODEL_DIR, "scaler.joblib")
 
 
 class AIModel:
     def __init__(self):
         self.model = None
+        self.team_encoder = None
+        self.winner_encoder = None
+        self.scaler = None
         self.last_trained_at = None
-        self._load_model()  # Attempt to load an initial model
+        self._load_model()
 
     def _load_model(self):
-        """
-        Placeholder for loading a pre-trained model from disk or a cloud storage.
-        This would load your actual ML model artifact.
-        """
+        """Load model and artifacts from disk if they exist."""
+        if (
+            os.path.exists(MODEL_FILE)
+            and os.path.exists(TEAM_ENCODER_FILE)
+            and os.path.exists(WINNER_ENCODER_FILE)
+            and os.path.exists(SCALER_FILE)
+        ):
+            try:
+                self.model = joblib.load(MODEL_FILE)
+                self.team_encoder = joblib.load(TEAM_ENCODER_FILE)
+                self.winner_encoder = joblib.load(WINNER_ENCODER_FILE)
+                self.scaler = joblib.load(SCALER_FILE)
+                logger.info("Model and artifacts loaded from disk.")
+            except Exception as e:
+                logger.exception(f"Failed to load model artifacts: {e}")
+                self.model = None
+        else:
+            logger.warning("No trained model found. Please call /retrain first.")
 
-        logger.info("INFO: Attempting to load AI model...")
-        self.model = {"status": "dummy_model_loaded", "version": "1.0"}
-        self.last_trained_at = str(datetime.datetime.now()).split(".")[
-            0
-        ]  # Store current time as last trained time
-        logger.info(
-            f"INFO: AI model loaded. Status: {self.model['status']}, Version: {self.model['version']}"
+    def retrain(self, data_path: str = "data/training_data.csv"):
+        """Train or retrain the model using the CSV at data_path.
+        Expects columns: home_team, away_team, home_team_odds_avg, away_team_odds_avg, winner
+        """
+        logger.info("Starting retrain process...")
+        if not os.path.exists(data_path):
+            msg = f"Dataset not found at {data_path}"
+            logger.error(msg)
+            raise FileNotFoundError(msg)
+
+        # Load data
+        df = pd.read_csv(data_path)
+
+        required_cols = [
+            "home_team",
+            "away_team",
+            "home_team_odds_avg",
+            "away_team_odds_avg",
+            "winner",
+        ]
+        for col in required_cols:
+            if col not in df.columns:
+                msg = f"Dataset missing required column: {col}"
+                logger.error(msg)
+                raise ValueError(msg)
+
+        # Ensure types and drop bad rows
+        df["home_team"] = df["home_team"].astype(str)
+        df["away_team"] = df["away_team"].astype(str)
+        df["winner"] = df["winner"].astype(str)
+        df["home_team_odds_avg"] = pd.to_numeric(df["home_team_odds_avg"], errors="coerce")
+        df["away_team_odds_avg"] = pd.to_numeric(df["away_team_odds_avg"], errors="coerce")
+
+        df = df.dropna(subset=required_cols)  # remove rows with missing required data
+        if df.shape[0] < 10:
+            msg = "Not enough valid rows in dataset after cleaning."
+            logger.error(msg)
+            raise ValueError(msg)
+
+        # Encode team names (fit on both home + away values)
+        combined = pd.concat([df["home_team"], df["away_team"]], ignore_index=True)
+        team_encoder = LabelEncoder()
+        team_encoder.fit(combined)
+
+        df["home_team_enc"] = team_encoder.transform(df["home_team"])
+        df["away_team_enc"] = team_encoder.transform(df["away_team"])
+
+        # Encode winners
+        winner_encoder = LabelEncoder()
+        df["winner_enc"] = winner_encoder.fit_transform(df["winner"])
+
+        # Prepare features and target
+        X = df[["home_team_enc", "away_team_enc", "home_team_odds_avg", "away_team_odds_avg"]].astype(
+            float
+        )
+        y = df["winner_enc"].astype(int)
+
+        # Scale numeric features
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+
+        # Train-test split for quick validation (optional)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_scaled, y, test_size=0.2, random_state=42
         )
 
-    def predict(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Placeholder for making predictions using the loaded AI model.
-        This will contain your actual prediction logic.
-        """
+        # Train classifier
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
+        model.fit(X_train, y_train)
 
-        logger.info(f"INFO: Making prediction with data: {data}")
-        home_team = data.get("home_team", "Home Team")
-        away_team = data.get("away_team", "Away Team")
+        # Optional validation score
+        try:
+            test_score = model.score(X_test, y_test)
+            logger.info(f"Retrain complete — validation accuracy: {test_score:.4f}")
+        except Exception:
+            test_score = None
 
-        winner_options = [home_team, away_team]
-        over_under_options = [
-            "Over 2.5",
-            "Under 2.5",
-            "Over 3.5",
-            "Under 3.5",
-            None,
-        ]  # Spread can be null
-        spread_options = [f"{home_team} -1.5", f"{away_team} +0.5", None]
+        # Save artifacts
+        joblib.dump(model, MODEL_FILE)
+        joblib.dump(team_encoder, TEAM_ENCODER_FILE)
+        joblib.dump(winner_encoder, WINNER_ENCODER_FILE)
+        joblib.dump(scaler, SCALER_FILE)
 
-        # Generate dummy predictions
-        winner = random.choice(winner_options)
-        winner_confidence = round(random.uniform(50, 99), 1) if winner else None
-        winner_odds = round(random.uniform(1.5, 3.0), 2) if winner else None
+        # Update in-memory objects
+        self.model = model
+        self.team_encoder = team_encoder
+        self.winner_encoder = winner_encoder
+        self.scaler = scaler
+        self.last_trained_at = datetime.datetime.utcnow().isoformat()
 
-        over_under = random.choice(over_under_options)
-        over_under_confidence = round(random.uniform(50, 99), 1) if over_under else None
-        over_under_odds = round(random.uniform(1.6, 2.2), 2) if over_under else None
-
-        spread = random.choice(spread_options)
-        spread_confidence = round(random.uniform(50, 99), 1) if spread else None
-        spread_odds = round(random.uniform(1.7, 2.5), 2) if spread else None
-        if spread is None:
-            spread_odds = None
-
+        logger.info(f"Model retrained and saved at {self.last_trained_at}")
         return {
-            "winner": winner,
-            "winner_confidence_pct": winner_confidence,
-            "winner_best_bet_odds": winner_odds,
-            "over_under": over_under,
-            "over_under_confidence_pct": over_under_confidence,
-            "over_under_best_bet_odds": over_under_odds,
-            "spread": spread,
-            "spread_confidence_pct": spread_confidence,
-            "spread_best_bet_odds": spread_odds,  # This can be null as per spec
+            "status": "success",
+            "message": "Model retrained successfully.",
+            "validation_score": test_score,
+            "last_trained_at": self.last_trained_at,
         }
 
-    def retrain(self):
-        """
-        Placeholder for the AI model retraining logic.
-        This would involve:
-        1. Sourcing historical or new data (e.g., from a database, data lake).
-        2. Preprocessing the data.
-        3. Training/fine-tuning the model.
-        4. Evaluating the model.
-        5. Saving the new model artifact.
-        6. Updating the loaded model in memory (or triggering a reload).
-        """
-        logger.info("INFO: Starting AI model retraining process...")
+    def predict(self, data: dict):
+        """Make prediction using the trained model and return structured response."""
+        if self.model is None or self.team_encoder is None or self.winner_encoder is None or self.scaler is None:
+            raise ValueError("No trained model loaded. Please retrain first.")
+
+        # Extract inputs
+        home_team = str(data.get("home_team", ""))
+        away_team = str(data.get("away_team", ""))
         try:
-            # Simulate data sourcing
-            logger.info("INFO: Sourcing historical or new data...")
-            time.sleep(2)  # Simulate network/DB call
+            home_odds = float(data.get("home_team_odds_avg"))
+            away_odds = float(data.get("away_team_odds_avg"))
+        except Exception:
+            raise ValueError("Odds must be numeric values.")
 
-            # Simulate data preprocessing
-            logger.info("INFO: Preprocessing data...")
-            time.sleep(1)
+        # Encode teams; handle unseen teams by falling back to 0 and logging
+        try:
+            home_enc = self.team_encoder.transform([home_team])[0]
+        except ValueError:
+            logger.warning(f"Unknown home_team '{home_team}' — falling back to 0.")
+            home_enc = 0
+        try:
+            away_enc = self.team_encoder.transform([away_team])[0]
+        except ValueError:
+            logger.warning(f"Unknown away_team '{away_team}' — falling back to 0.")
+            away_enc = 0
 
-            # Simulate model training
-            logger.info("INFO: Training new model version...")
-            time.sleep(5)  # This could be a long-running process
+        # Prepare and scale input
+        X = [[home_enc, away_enc, home_odds, away_odds]]
+        X_scaled = self.scaler.transform(X)
 
-            # Simulate model evaluation (e.g., checking performance metrics)
-            logger.info("INFO: Evaluating new model...")
-            time.sleep(1)
+        # Predict probabilities
+        probs = self.model.predict_proba(X_scaled)[0]
+        idx = int(probs.argmax())
+        winner_label = self.winner_encoder.inverse_transform([idx])[0]
+        confidence = float(probs[idx] * 100.0)
 
-            # Simulate saving the new model artifact
-            logger.info("INFO: Saving new model artifact...")
-            # In a real scenario, you'd save to a persistent volume, cloud storage (GCS, S3), etc.
-            time.sleep(0.5)
+        # Best bet odds logic (choose odds for predicted winner if string matches; otherwise choose higher confidence odds)
+        best_bet_odds = None
+        if winner_label == home_team:
+            best_bet_odds = home_odds
+        elif winner_label == away_team:
+            best_bet_odds = away_odds
+        else:
+            # If labels don't match exact input names, fall back to smaller odds (higher implied prob)
+            best_bet_odds = min(home_odds, away_odds)
 
-            # Update the in-memory model (or trigger a reload mechanism)
-            self._load_model()  # Reloads the dummy model for this example
-            self.last_trained_at = time.time()
-            logger.info(
-                f"INFO: AI model retraining complete. New model loaded at {time.ctime(self.last_trained_at)}"
-            )
-            return {
-                "status": "success",
-                "message": "Model retrained and loaded successfully.",
-                "last_trained_at": time.ctime(self.last_trained_at),
-            }
-        except Exception as e:
-            logger.error(f"ERROR: Model retraining failed: {e}")
-            return {"status": "error", "message": f"Model retraining failed: {str(e)}"}
+        return {
+            "winner": winner_label,
+            "winner_confidence_pct": round(confidence, 2),
+            "winner_best_bet_odds": float(best_bet_odds) if best_bet_odds is not None else None,
+            "over_under": None,
+            "over_under_confidence_pct": None,
+            "over_under_best_bet_odds": None,
+            "spread": None,
+            "spread_confidence_pct": None,
+            "spread_best_bet_odds": None,
+        }
